@@ -49,9 +49,8 @@ namespace WebApplication1.Models
     public class LoginViewModel
     {
         [Required]
-        [Display(Name = "Адрес электронной почты")]
-        [EmailAddress]
-        public string Email { get; set; }
+        [Display(Name = "Логин")]
+        public string Name { get; set; }       
 
         [Required]
         [DataType(DataType.Password)]
@@ -64,6 +63,10 @@ namespace WebApplication1.Models
 
     public class RegisterViewModel
     {
+        [Required]
+        [Display(Name = "Логин")]
+        public string Name { get; set; }
+
         [Required]
         [EmailAddress]
         [Display(Name = "Адрес электронной почты")]
