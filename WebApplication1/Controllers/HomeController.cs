@@ -46,16 +46,25 @@ namespace WebApplication1.Controllers
 
 
         [Authorize(Roles = "Client")]
-        public ActionResult Client()
+        public async Task<ActionResult> Client()
         {
             try
             {
-                //найти время последнего сообщения
-                DateTime lastDate = db.Posts.Where(n => n.Name == User.Identity.Name).OrderByDescending(k => k.Date).FirstOrDefault().Date;
-                TimeSpan diff = DateTime.Now - lastDate;
-                if (diff.TotalHours < 24)
+                bool returnmsg = false;
+                int hours = 0;
+                //TODO: выяснить есть ли готовый асинхр. метод...  
+                await Task.Run(() =>
                 {
-                    ViewBag.Msg = "Сообщения отправляются не чаще 1 раза в сутки, зайдите через " + (24 - (int)diff.TotalHours).ToString() + " ч.";
+                    //время последнего сообщения
+                    //TODO: в настоящем проекте это должна быть отдельная таблица, с отметкой о последнем сообщении клиента, т.к. OrderBy может занимать время, если сообщений много  
+                    DateTime lastDate = db.Posts.Where(n => n.Name == User.Identity.Name).OrderByDescending(k => k.Date).FirstOrDefault().Date;
+                    TimeSpan diff = DateTime.Now - lastDate;
+                    hours = (int)diff.TotalHours;
+                    if (hours < 24) returnmsg = true;
+                });
+                if (returnmsg)
+                {
+                    ViewBag.Msg = "Сообщения отправляются не чаще 1 раза в сутки, зайдите через " + (24 - hours).ToString() + " ч.";
                     return View("ClientTime");
                 }
             }
@@ -67,21 +76,25 @@ namespace WebApplication1.Controllers
         [HttpPost]
         [Authorize(Roles = "Client")]
         [ValidateAntiForgeryToken]
-        public ActionResult Client(Posts model, string returnUrl, HttpPostedFileBase upload)
+        public async Task<ActionResult> Client(Posts model, string returnUrl, HttpPostedFileBase upload)
         {
-            //сообщение должно содержать либо файл, либо текст, либо все вместе
             //TODO: сделать валидацию на клиенте
+
+            //сообщение должно содержать либо файл, либо текст, либо все вместе            
             bool valid = false;
 
             if (upload != null)
             {
-                //TODO: сделать асинхронную загрузку
-                //файлы на диске будут с уникальными именами
-                string guidFileName = Guid.NewGuid().ToString();
-                upload.SaveAs(Server.MapPath("~/Files/" + guidFileName));
-                model.File = upload.FileName; //настоящее имя файла тоже сохраняется
-                model.FileName = guidFileName;
-                valid = true;
+                await Task.Run(() => 
+                {                    
+                    //файлы на диске будут с уникальными именами
+                    string guidFileName = Guid.NewGuid().ToString();
+                    upload.SaveAs(Server.MapPath("~/Files/" + guidFileName));
+                    model.File = upload.FileName; //настоящее имя файла тоже сохраняется
+                    model.FileName = guidFileName;
+                    valid = true;
+                });
+                
             }
 
             //
@@ -94,9 +107,12 @@ namespace WebApplication1.Controllers
                 model.Name = User.Identity.Name;
                 model.UserID = User.Identity.GetUserId();
                 db.Posts.Add(model);
-                db.SaveChanges();
+                await db.SaveChangesAsync();
                 return RedirectToAction("Client");
             }
+
+            if(!valid) ViewBag.Msg = "Сообщение должно содержать либо файл, либо текст, либо файл и текст.";
+
             return View();
         }
 
@@ -110,6 +126,7 @@ namespace WebApplication1.Controllers
         [Authorize(Roles = "Manager")]
         public ActionResult Download(string name, string file)
         {
+            //TODO: выяснить можно ли и нужно ли асинхронно..
             return File(file, "other", name);
         }
 
