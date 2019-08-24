@@ -1,0 +1,32 @@
+﻿@using WebApplication1.MF
+@model List<Posts>
+@{
+    ViewBag.Title = "Manager";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Manager</h2>
+
+<table class="table">
+    <th>Дата</th>
+    <th>Логин</th>
+    <th>Сообщение</th>
+    <th>Файл</th>
+    <th>Пометить как прочитанное</th>
+
+    @foreach (Posts p in Model)
+    {
+<tr>
+    <td>@p.Date</td>
+    <td>@p.Name</td>
+    <td><pre>@p.Text</pre></td>
+    <td><a href="Download?name=@p.File&file=@Server.MapPath("~/Files/" + p.FileName)">@p.File</a></td>
+    <td><a href="Manager2?id=@p.Id">Прочитано</a></td>
+</tr>
+    }
+
+</table>
+
+
+
+
