@@ -201,6 +201,10 @@
     <Compile Include="Startup.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="App_Data\aspnet-WebApplication1-20190823121611.mdf" />
+    <Content Include="App_Data\aspnet-WebApplication1-20190823121611_log.ldf">
+      <DependentUpon>aspnet-WebApplication1-20190823121611.mdf</DependentUpon>
+    </Content>
     <Content Include="Content\bootstrap-theme.css" />
     <Content Include="Content\bootstrap-theme.min.css" />
     <Content Include="Content\bootstrap.css" />
@@ -228,6 +232,7 @@
     <Content Include="MF\ModelPosts.edmx.diagram">
       <DependentUpon>ModelPosts.edmx</DependentUpon>
     </Content>
+    <None Include="Properties\PublishProfiles\FolderProfile.pubxml" />
     <None Include="Scripts\jquery-3.3.1.intellisense.js" />
     <Content Include="Scripts\jquery-3.3.1.js" />
     <Content Include="Scripts\jquery-3.3.1.min.js" />
@@ -277,7 +282,6 @@
     <Content Include="Views\Home\Manager.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="App_Data\" />
     <Folder Include="Files\" />
   </ItemGroup>
   <ItemGroup>

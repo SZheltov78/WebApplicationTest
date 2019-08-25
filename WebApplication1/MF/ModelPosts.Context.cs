@@ -13,9 +13,9 @@ namespace WebApplication1.MF
     using System.Data.Entity;
     using System.Data.Entity.Infrastructure;
     
-    public partial class Entities : DbContext
+    public partial class PostsDbContext : DbContext
     {
-        public Entities()
+        public PostsDbContext()
             : base("name=Entities3")
         {
         }
