@@ -18,6 +18,8 @@ namespace WebApplication1.MF
         public string UserID { get; set; }
         public System.DateTime Date { get; set; }
         public string Name { get; set; }
+        public string Email { get; set; }
+        public string Subject { get; set; }
         public string Text { get; set; }
         public string File { get; set; }
         public string FileName { get; set; }

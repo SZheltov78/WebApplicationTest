@@ -16,7 +16,7 @@ namespace WebApplication1.MF
     public partial class Entities : DbContext
     {
         public Entities()
-            : base("name=Entities2")
+            : base("name=Entities3")
         {
         }
     
